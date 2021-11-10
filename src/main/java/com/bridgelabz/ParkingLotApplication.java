@@ -8,8 +8,7 @@ package com.bridgelabz;
  */
 
 public class ParkingLotApplication {
-
-    private Object Vehicle;
+    private Object vehicle;
 
     /**
      * Purpose To Print Given Welcome Message
@@ -27,7 +26,25 @@ public class ParkingLotApplication {
      * @param vehicle given vehicle as parameter
      * @return True For Vehicle Parked
      */
-    public boolean Park(Object vehicle) {
+    public boolean park(Object vehicle) {
+        if (this.vehicle != null)
+            return false;
+        this.vehicle = vehicle;
         return true;
+    }
+
+    /**
+     * Purpose To Check given Vehicle is UnParked or Not
+     *
+     * @param vehicle given vehicle as parameter
+     * @return Vehicle UnParked or Not
+     */
+    public boolean unPark(Object vehicle) {
+        if (this.vehicle == null) return false;
+        if (this.vehicle.equals(vehicle)) {
+            this.vehicle = null;
+            return true;
+        }
+        return false;
     }
 }
