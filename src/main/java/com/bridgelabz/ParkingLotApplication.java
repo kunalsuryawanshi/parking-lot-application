@@ -24,7 +24,6 @@ public class ParkingLotApplication {
      * Purpose To Park Given Vehicle
      *
      * @param vehicle given vehicle as parameter
-     * @return Vehicle Parked Return True
      */
     public void park(Object vehicle) throws ParkingLotException {
         if (this.vehicle != null)
@@ -36,15 +35,12 @@ public class ParkingLotApplication {
      * Purpose To Check given Vehicle is UnParked or Not
      *
      * @param vehicle given vehicle as parameter
-     * @return Vehicle UnParked or Not
      */
-    public boolean unPark(Object vehicle) {
-        if (this.vehicle == null) return false;
+    public void unPark(Object vehicle) throws ParkingLotException {
+        if (this.vehicle == null) throw new ParkingLotException("No Such Vehicle Found");
         if (this.vehicle.equals(vehicle)) {
             this.vehicle = null;
-            return true;
         }
-        return false;
     }
 
     /**

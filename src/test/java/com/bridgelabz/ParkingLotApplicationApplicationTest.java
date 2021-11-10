@@ -33,12 +33,22 @@ public class ParkingLotApplicationApplicationTest {
     }
 
     @Test
-    public void givenAVehicle_WhenAlreadyParked_ShouldReturnFalse() {
+    public void givenAVehicle_WhenAlreadyParked_ShouldReturnException() {
         try {
             service.park(vehicle);
             service.park(new Object());
         } catch (ParkingLotException e) {
             Assertions.assertEquals("Parking Lot is Full", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenNullVehicle_WhenUnPark_ShouldReturnException() {
+        try {
+            service.unPark(vehicle);
+        } catch (ParkingLotException e) {
+            Assertions.assertEquals("No Such Vehicle Found", e.getMessage());
             e.printStackTrace();
         }
     }
