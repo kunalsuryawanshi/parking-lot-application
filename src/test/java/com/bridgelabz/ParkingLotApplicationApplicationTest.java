@@ -23,21 +23,35 @@ public class ParkingLotApplicationApplicationTest {
 
     @Test
     public void givenAVehicle_WhenParked_ShouldReturnTrue() {
-        boolean isParked = service.park(new Object());
-        Assertions.assertTrue(isParked);
+        try {
+            service.park(vehicle);
+            boolean isParked = service.isVehicleParked(vehicle);
+            Assertions.assertTrue(isParked);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void givenAVehicle_WhenAlreadyParked_ShouldReturnFalse() {
-        service.park(vehicle);
-        boolean isParked = service.park(new Object());
-        Assertions.assertFalse(isParked);
+        try {
+            service.park(vehicle);
+            service.park(new Object());
+        } catch (ParkingLotException e) {
+            Assertions.assertEquals("Parking Lot is Full", e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void givenAVehicle_WhenUnParked_ShouldReturnTrue() {
-        service.park(vehicle);
-        boolean isUnParked = service.unPark(vehicle);
-        Assertions.assertTrue(isUnParked);
+        try {
+            service.park(vehicle);
+            service.unPark(vehicle);
+            boolean isUnParked = service.isVehicleUnParked(vehicle);
+            Assertions.assertTrue(isUnParked);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
     }
 }

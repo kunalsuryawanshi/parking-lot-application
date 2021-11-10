@@ -24,13 +24,12 @@ public class ParkingLotApplication {
      * Purpose To Park Given Vehicle
      *
      * @param vehicle given vehicle as parameter
-     * @return True For Vehicle Parked
+     * @return Vehicle Parked Return True
      */
-    public boolean park(Object vehicle) {
+    public void park(Object vehicle) throws ParkingLotException {
         if (this.vehicle != null)
-            return false;
+            throw new ParkingLotException("Parking Lot is Full");
         this.vehicle = vehicle;
-        return true;
     }
 
     /**
@@ -46,5 +45,26 @@ public class ParkingLotApplication {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Purpose To Check a Vehicle is Parked Or Not
+     *
+     * @param vehicle given Vehicle
+     * @return If Vehicle Equal to Given Vehicle
+     * it will return True or False
+     */
+    public boolean isVehicleParked(Object vehicle) {
+        return this.vehicle.equals(vehicle);
+    }
+
+    /**
+     * Purpose To Check a Vehicle is UnParked Or Not
+     *
+     * @param vehicle given Vehicle
+     * @return Vehicle Equal to null -> Vehicle is UnParked and return True
+     */
+    public boolean isVehicleUnParked(Object vehicle) {
+        return this.vehicle == null;
     }
 }
