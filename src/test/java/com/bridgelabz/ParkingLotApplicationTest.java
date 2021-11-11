@@ -95,4 +95,17 @@ public class ParkingLotApplicationTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenAVehicle_WhenParked_ShouldReturnHowMuchSpaceAvailable() {
+        ParkingLotOwner owner = new ParkingLotOwner();
+        service.registerOwner(owner);
+        try {
+            service.park(vehicle);
+            service.spaceRemaining();
+        } catch (ParkingLotException e) {
+            Assertions.assertEquals("2 Space Remaining", e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

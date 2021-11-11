@@ -57,6 +57,8 @@ public class ParkingLotApplication {
         if (this.vehicle == null) throw new ParkingLotException("No Such Vehicle Found");
         if (this.vehicle.equals(vehicle)) {
             this.vehicle = null;
+            this.currentCapacity--;
+            throw new ParkingLotException("Parking Lot Has Space");
         }
     }
 
@@ -97,5 +99,15 @@ public class ParkingLotApplication {
      */
     public void registerAirportSecurity(AirportSecurity security) {
         this.security = security;
+    }
+
+    /**
+     * Purpose To Show Remaining Spaces For Parking Lot
+     *
+     * @throws ParkingLotException Remaining Spaces
+     */
+    public void spaceRemaining() throws ParkingLotException {
+        if (actualCapacity >= currentCapacity)
+            throw new ParkingLotException(actualCapacity - currentCapacity + " Space Remaining");
     }
 }
