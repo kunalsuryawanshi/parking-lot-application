@@ -5,13 +5,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ParkingLotApplicationTest {
-    public final int capacity = 1;
+    public final int capacity = 3;
     ParkingLotApplication service;
+    ParkingLotOwner owner;
     Object vehicle = null;
 
     @BeforeEach
     void setUp() {
         vehicle = new Object();
+        owner = new ParkingLotOwner();
         service = new ParkingLotApplication(capacity);
     }
 
@@ -68,10 +70,26 @@ public class ParkingLotApplicationTest {
 
     @Test
     public void givenVehicle_WhenParkingLotIsFull_ShouldInformTheOwner() {
-        ParkingLotOwner owner = new ParkingLotOwner();
         service.registerOwner(owner);
         try {
             service.park(vehicle);
+            service.park(new Object());
+            service.park(new Object());
+        } catch (ParkingLotException e) {
+            Assertions.assertEquals("Parking Lot is Full", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenAVehicle_WhenParkingLotIsFull_ShouldInformSecurity() {
+        AirportSecurity security = new AirportSecurity();
+        service.registerOwner(owner);
+        service.registerAirportSecurity(security);
+        try {
+            service.park(vehicle);
+            service.park(new Object());
+            service.park(new Object());
         } catch (ParkingLotException e) {
             Assertions.assertEquals("Parking Lot is Full", e.getMessage());
             e.printStackTrace();

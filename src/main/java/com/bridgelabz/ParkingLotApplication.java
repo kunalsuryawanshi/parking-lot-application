@@ -11,6 +11,7 @@ public class ParkingLotApplication {
     private final int actualCapacity;
     private Object vehicle;
     private ParkingLotOwner owner;
+    private AirportSecurity security;
     private int currentCapacity;
 
     public ParkingLotApplication(int capacity) {
@@ -34,13 +35,17 @@ public class ParkingLotApplication {
      * @param vehicle given vehicle as parameter
      */
     public void park(Object vehicle) throws ParkingLotException {
-        if (this.currentCapacity == this.actualCapacity)
-            throw new ParkingLotException("Parking Lot is Full");
+        if (this.currentCapacity == this.actualCapacity) {
+            owner.parkingLotIsFull("Parking Lot is Full");
+            security.parkingLotIsFull("Parking Lot is Full");
+        }
         this.vehicle = vehicle;
         if (this.vehicle != null)
             this.currentCapacity++;
-        if (this.currentCapacity == this.actualCapacity)
-            throw new ParkingLotException("Parking Lot is Full");
+        if (this.currentCapacity == this.actualCapacity) {
+            owner.parkingLotIsFull("Parking Lot is Full");
+            security.parkingLotIsFull("Parking Lot is Full");
+        }
     }
 
     /**
@@ -77,11 +82,20 @@ public class ParkingLotApplication {
     }
 
     /**
-     * Purpose To Introduced Parking Lot Owner
+     * Purpose To Introduced ParkingLot Owner
      *
-     * @param owner given Parameter as Owner
+     * @param owner : given Parameter as ParkingLotOwner
      */
     public void registerOwner(ParkingLotOwner owner) {
         this.owner = owner;
+    }
+
+    /**
+     * Purpose To Introduced AirportSecurity
+     *
+     * @param security given Parameter as AirportSecurity
+     */
+    public void registerAirportSecurity(AirportSecurity security) {
+        this.security = security;
     }
 }
