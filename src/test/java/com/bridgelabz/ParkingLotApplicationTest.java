@@ -4,14 +4,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ParkingLotApplicationApplicationTest {
+public class ParkingLotApplicationTest {
+    public final int capacity = 1;
     ParkingLotApplication service;
     Object vehicle = null;
 
     @BeforeEach
     void setUp() {
         vehicle = new Object();
-        service = new ParkingLotApplication();
+        service = new ParkingLotApplication(capacity);
     }
 
     @Test
@@ -61,6 +62,18 @@ public class ParkingLotApplicationApplicationTest {
             boolean isUnParked = service.isVehicleUnParked(vehicle);
             Assertions.assertTrue(isUnParked);
         } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenVehicle_WhenParkingLotIsFull_ShouldInformTheOwner() {
+        ParkingLotOwner owner = new ParkingLotOwner();
+        service.registerOwner(owner);
+        try {
+            service.park(vehicle);
+        } catch (ParkingLotException e) {
+            Assertions.assertEquals("Parking Lot is Full", e.getMessage());
             e.printStackTrace();
         }
     }

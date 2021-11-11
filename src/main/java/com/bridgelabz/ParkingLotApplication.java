@@ -8,7 +8,15 @@ package com.bridgelabz;
  */
 
 public class ParkingLotApplication {
+    private final int actualCapacity;
     private Object vehicle;
+    private ParkingLotOwner owner;
+    private int currentCapacity;
+
+    public ParkingLotApplication(int capacity) {
+        this.currentCapacity = 0;
+        this.actualCapacity = capacity;
+    }
 
     /**
      * Purpose To Print Given Welcome Message
@@ -26,9 +34,13 @@ public class ParkingLotApplication {
      * @param vehicle given vehicle as parameter
      */
     public void park(Object vehicle) throws ParkingLotException {
-        if (this.vehicle != null)
+        if (this.currentCapacity == this.actualCapacity)
             throw new ParkingLotException("Parking Lot is Full");
         this.vehicle = vehicle;
+        if (this.vehicle != null)
+            this.currentCapacity++;
+        if (this.currentCapacity == this.actualCapacity)
+            throw new ParkingLotException("Parking Lot is Full");
     }
 
     /**
@@ -62,5 +74,14 @@ public class ParkingLotApplication {
      */
     public boolean isVehicleUnParked(Object vehicle) {
         return this.vehicle == null;
+    }
+
+    /**
+     * Purpose To Introduced Parking Lot Owner
+     *
+     * @param owner given Parameter as Owner
+     */
+    public void registerOwner(ParkingLotOwner owner) {
+        this.owner = owner;
     }
 }
