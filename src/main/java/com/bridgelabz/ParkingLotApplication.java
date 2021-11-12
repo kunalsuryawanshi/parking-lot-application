@@ -1,21 +1,23 @@
 package com.bridgelabz;
-
-/**
- * Purpose To Simulate With Parking Lot Problem
+/******************************************************************************
+ *  Purpose: To Simulate With Parking Lot Problem.
  *
- * @author KUNAL SURYAWANSHI
- * @since 10/11/2021
- */
+ *  @author KUNAL SURYAWANSHI
+ *  @version 1.0
+ *  @since 10-11-2021
+ ******************************************************************************/
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParkingLotApplication {
-    private final int actualCapacity;
-    private Object vehicle;
-    private ParkingLotOwner owner;
-    private AirportSecurity security;
-    private int currentCapacity;
+    private final List vehicles;
+    private final List<ParkingLotObserver> observers;
+    private int actualCapacity;
 
     public ParkingLotApplication(int capacity) {
-        this.currentCapacity = 0;
+        this.observers = new ArrayList<>();
+        this.vehicles = new ArrayList();
         this.actualCapacity = capacity;
     }
 
@@ -30,84 +32,67 @@ public class ParkingLotApplication {
     }
 
     /**
+     * Purpose To Set Capacity For Parking Lot
+     *
+     * @param capacity given parameter as a capacity
+     */
+    public void setCapacity(int capacity) {
+        this.actualCapacity = capacity;
+    }
+
+    /**
+     * Purpose To Add Observer In List
+     *
+     * @param observer Given Observer as a Parameter
+     */
+    public void registerParkingLotObserver(ParkingLotObserver observer) {
+        this.observers.add(observer);
+    }
+
+    /**
      * Purpose To Park Given Vehicle
      *
      * @param vehicle given vehicle as parameter
      */
     public void park(Object vehicle) throws ParkingLotException {
-        if (this.currentCapacity == this.actualCapacity) {
-            owner.parkingLotIsFull("Parking Lot is Full");
-            security.parkingLotIsFull("Parking Lot is Full");
+        if (this.vehicles.size() == this.actualCapacity) {
+            for (ParkingLotObserver observer : observers) {
+                observer.capacityIsFull();
+            }
+            //throw new ParkingLotException("Parking Lot is Full");
         }
-        this.vehicle = vehicle;
-        if (this.vehicle != null)
-            this.currentCapacity++;
-        if (this.currentCapacity == this.actualCapacity) {
-            owner.parkingLotIsFull("Parking Lot is Full");
-            security.parkingLotIsFull("Parking Lot is Full");
-        }
+        if (isVehicleParked(vehicle))
+            throw new ParkingLotException("Vehicle Already Parked");
+        this.vehicles.add(vehicle);
+    }
+
+    /**
+     * Purpose To Check a Vehicle is Parked Or Not
+     *
+     * @param vehicle given Vehicle as Parameter
+     * @return If Vehicle contains Given Vehicle
+     * it will return True
+     */
+    public boolean isVehicleParked(Object vehicle) {
+        return this.vehicles.contains(vehicle);
     }
 
     /**
      * Purpose To Check given Vehicle is UnParked or Not
      *
      * @param vehicle given vehicle as parameter
+     * @return Boolean type for Vehicle UnPark
+     * @throws ParkingLotException If Condition Not Matches Then Throwing Exception Vehicle Not Found
      */
-    public void unPark(Object vehicle) throws ParkingLotException {
-        if (this.vehicle == null) throw new ParkingLotException("No Such Vehicle Found");
-        if (this.vehicle.equals(vehicle)) {
-            this.vehicle = null;
-            this.currentCapacity--;
-            throw new ParkingLotException("Parking Lot Has Space");
+    public boolean unPark(Object vehicle) throws ParkingLotException {
+        if (vehicle == null) return false;
+        if (this.vehicles.contains(vehicle)) {
+            this.vehicles.remove(vehicle);
+            for (ParkingLotObserver observer : observers) {
+                observer.capacityIsAvailable();
+            }
+            return true;
         }
-    }
-
-    /**
-     * Purpose To Check a Vehicle is Parked Or Not
-     *
-     * @param vehicle given Vehicle
-     * @return If Vehicle Equal to Given Vehicle
-     * it will return True or False
-     */
-    public boolean isVehicleParked(Object vehicle) {
-        return this.vehicle.equals(vehicle);
-    }
-
-    /**
-     * Purpose To Check a Vehicle is UnParked Or Not
-     *
-     * @param vehicle given Vehicle
-     * @return Vehicle Equal to null -> Vehicle is UnParked and return True
-     */
-    public boolean isVehicleUnParked(Object vehicle) {
-        return this.vehicle == null;
-    }
-
-    /**
-     * Purpose To Introduced ParkingLot Owner
-     *
-     * @param owner : given Parameter as ParkingLotOwner
-     */
-    public void registerOwner(ParkingLotOwner owner) {
-        this.owner = owner;
-    }
-
-    /**
-     * Purpose To Introduced AirportSecurity
-     *
-     * @param security given Parameter as AirportSecurity
-     */
-    public void registerAirportSecurity(AirportSecurity security) {
-        this.security = security;
-    }
-
-    /**
-     * Purpose To Show Remaining Spaces For Parking Lot
-     *
-     * @throws ParkingLotException Remaining Spaces
-     */
-    public void spaceRemaining() throws ParkingLotException {
-        if (actualCapacity >= currentCapacity)
-            throw new ParkingLotException(actualCapacity - currentCapacity + " Space Remaining");
+        throw new ParkingLotException("No Such Vehicle Found");
     }
 }

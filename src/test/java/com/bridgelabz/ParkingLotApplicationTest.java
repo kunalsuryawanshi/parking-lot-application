@@ -5,8 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ParkingLotApplicationTest {
-    public final int capacity = 3;
+    public int capacity = 1;
     ParkingLotApplication service;
+    AirportSecurity airportSecurity;
     ParkingLotOwner owner;
     Object vehicle = null;
 
@@ -14,6 +15,7 @@ public class ParkingLotApplicationTest {
     void setUp() {
         vehicle = new Object();
         owner = new ParkingLotOwner();
+        airportSecurity = new AirportSecurity();
         service = new ParkingLotApplication(capacity);
     }
 
@@ -25,87 +27,69 @@ public class ParkingLotApplicationTest {
     }
 
     @Test
-    public void givenAVehicle_WhenParked_ShouldReturnTrue() {
-        try {
-            service.park(vehicle);
-            boolean isParked = service.isVehicleParked(vehicle);
-            Assertions.assertTrue(isParked);
-        } catch (ParkingLotException e) {
-            e.printStackTrace();
-        }
+    public void givenAVehicle_WhenParked_ShouldReturnTrue() throws ParkingLotException {
+        service.park(vehicle);
+        boolean isParked = service.isVehicleParked(vehicle);
+        Assertions.assertTrue(isParked);
     }
 
     @Test
-    public void givenAVehicle_WhenAlreadyParked_ShouldReturnException() {
-        try {
-            service.park(vehicle);
-            service.park(new Object());
-        } catch (ParkingLotException e) {
-            Assertions.assertEquals("Parking Lot is Full", e.getMessage());
-            e.printStackTrace();
-        }
+    public void givenAVehicle_WhenAlreadyParked_ShouldReturnException() throws ParkingLotException {
+        service.registerParkingLotObserver(airportSecurity);
+        service.park(vehicle);
+        Assertions.assertThrows(ParkingLotException.class, () -> service.park(vehicle));
     }
 
     @Test
     public void givenNullVehicle_WhenUnPark_ShouldReturnException() {
-        try {
-            service.unPark(vehicle);
-        } catch (ParkingLotException e) {
-            Assertions.assertEquals("No Such Vehicle Found", e.getMessage());
-            e.printStackTrace();
-        }
+        Assertions.assertThrows(ParkingLotException.class, () -> service.unPark(vehicle));
     }
 
     @Test
-    public void givenAVehicle_WhenUnParked_ShouldReturnTrue() {
-        try {
-            service.park(vehicle);
-            service.unPark(vehicle);
-            boolean isUnParked = service.isVehicleUnParked(vehicle);
-            Assertions.assertTrue(isUnParked);
-        } catch (ParkingLotException e) {
-            e.printStackTrace();
-        }
+    public void givenAVehicle_WhenUnParked_ShouldReturnTrue() throws ParkingLotException {
+        service.park(vehicle);
+        boolean isUnParked = service.unPark(vehicle);
+        Assertions.assertTrue(isUnParked);
     }
 
     @Test
-    public void givenVehicle_WhenParkingLotIsFull_ShouldInformTheOwner() {
-        service.registerOwner(owner);
-        try {
-            service.park(vehicle);
-            service.park(new Object());
-            service.park(new Object());
-        } catch (ParkingLotException e) {
-            Assertions.assertEquals("Parking Lot is Full", e.getMessage());
-            e.printStackTrace();
-        }
+    public void givenVehicle_WhenParkingLotIsFull_ShouldInformTheOwner() throws ParkingLotException {
+        service.registerParkingLotObserver(owner);
+        Object vehicle2 = new Object();
+        service.park(vehicle);
+        service.park(vehicle2);
+        boolean capacityFull = owner.isCapacityFull();
+        Assertions.assertTrue(capacityFull);
     }
 
     @Test
-    public void givenAVehicle_WhenParkingLotIsFull_ShouldInformSecurity() {
-        AirportSecurity security = new AirportSecurity();
-        service.registerOwner(owner);
-        service.registerAirportSecurity(security);
-        try {
-            service.park(vehicle);
-            service.park(new Object());
-            service.park(new Object());
-        } catch (ParkingLotException e) {
-            Assertions.assertEquals("Parking Lot is Full", e.getMessage());
-            e.printStackTrace();
-        }
+    public void givenCapacityIs2_ShouldBeAbleToPark2Vehicles() throws ParkingLotException {
+        Object vehicle2 = new Object();
+        service.setCapacity(2);
+        service.park(vehicle);
+        service.park(vehicle2);
+        boolean isVehicleParked1 = service.isVehicleParked(vehicle);
+        boolean isVehicleParked2 = service.isVehicleParked(vehicle2);
+        Assertions.assertTrue(isVehicleParked1 && isVehicleParked2);
     }
 
     @Test
-    public void givenAVehicle_WhenParked_ShouldReturnHowMuchSpaceAvailable() {
-        ParkingLotOwner owner = new ParkingLotOwner();
-        service.registerOwner(owner);
-        try {
-            service.park(vehicle);
-            service.spaceRemaining();
-        } catch (ParkingLotException e) {
-            Assertions.assertEquals("2 Space Remaining", e.getMessage());
-            e.printStackTrace();
-        }
+    public void givenWhenParkingLotIsFull_ShouldInformTheSecurity() throws ParkingLotException {
+        service.registerParkingLotObserver(airportSecurity);
+        Object vehicle2 = new Object();
+        service.park(vehicle);
+        service.park(vehicle2);
+        boolean capacityFull = airportSecurity.isCapacityFull();
+        Assertions.assertTrue(capacityFull);
+    }
+
+    @Test
+    public void givenWhenParkingLotSpaceIsAvailableAfterFull_ShouldReturnTrue() throws ParkingLotException {
+        service.registerParkingLotObserver(owner);
+        service.park(vehicle);
+        service.park(new Object());
+        service.unPark(vehicle);
+        boolean capacityFull = owner.isCapacityFull();
+        Assertions.assertFalse(capacityFull);
     }
 }
