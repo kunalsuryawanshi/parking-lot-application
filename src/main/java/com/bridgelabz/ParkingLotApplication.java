@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParkingLotApplication {
-    private final List vehicles;
-    private final List<ParkingLotObserver> observers;
-    private int actualCapacity;
+    public static List vehicles;
+    private static List<ParkingLotObserver> observers;
+    private static int actualCapacity;
 
-    public ParkingLotApplication(int capacity) {
+    public ParkingLotApplication() {
         this.observers = new ArrayList<>();
         this.vehicles = new ArrayList();
-        this.actualCapacity = capacity;
+        //this.actualCapacity = capacity;
     }
 
     /**
@@ -59,7 +59,7 @@ public class ParkingLotApplication {
             for (ParkingLotObserver observer : observers) {
                 observer.capacityIsFull();
             }
-            //throw new ParkingLotException("Parking Lot is Full");
+            throw new ParkingLotException("Parking Lot is Full");
         }
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("Vehicle Already Parked");
@@ -85,7 +85,7 @@ public class ParkingLotApplication {
      * @throws ParkingLotException If Condition Not Matches Then Throwing Exception Vehicle Not Found
      */
     public boolean unPark(Object vehicle) throws ParkingLotException {
-        if (vehicle == null) return false;
+        if (this.vehicles == null) return false;
         if (this.vehicles.contains(vehicle)) {
             this.vehicles.remove(vehicle);
             for (ParkingLotObserver observer : observers) {
