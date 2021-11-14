@@ -28,15 +28,15 @@ public class ParkingLotApplicationTest {
 
     @Test
     public void givenAVehicle_WhenParked_ShouldReturnTrue() throws ParkingLotException {
-        service.park(vehicle);
+        service.park(vehicle, "15:00");
         boolean isParked = service.isVehicleParked(vehicle);
         Assertions.assertTrue(isParked);
     }
 
     @Test
     public void givenAVehicle_WhenAlreadyParked_ShouldReturnException() throws ParkingLotException {
-        service.park(vehicle);
-        Assertions.assertThrows(ParkingLotException.class, () -> service.park(vehicle));
+        service.park(vehicle, "15:00");
+        Assertions.assertThrows(ParkingLotException.class, () -> service.park(vehicle, "15:00"));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ParkingLotApplicationTest {
 
     @Test
     public void givenAVehicle_WhenUnParked_ShouldReturnTrue() throws ParkingLotException {
-        service.park(vehicle);
+        service.park(vehicle, "15:00");
         boolean isUnParked = service.unPark(vehicle);
         Assertions.assertTrue(isUnParked);
     }
@@ -56,8 +56,8 @@ public class ParkingLotApplicationTest {
         service.registerParkingLotObserver(owner);
         Object vehicle2 = new Object();
         try {
-            service.park(vehicle);
-            service.park(vehicle2);
+            service.park(vehicle, "15:00");
+            service.park(vehicle2, "15:00");
             boolean capacityFull = owner.isCapacityFull();
             Assertions.assertTrue(capacityFull);
         } catch (ParkingLotException e) {
@@ -68,8 +68,8 @@ public class ParkingLotApplicationTest {
     public void givenCapacityIs2_ShouldBeAbleToPark2Vehicles() throws ParkingLotException {
         Object vehicle2 = new Object();
         service.setCapacity(2);
-        service.park(vehicle);
-        service.park(vehicle2);
+        service.park(vehicle, "15:00");
+        service.park(vehicle2, "15:00");
         boolean isVehicleParked1 = service.isVehicleParked(vehicle);
         boolean isVehicleParked2 = service.isVehicleParked(vehicle2);
         Assertions.assertTrue(isVehicleParked1 && isVehicleParked2);
@@ -80,8 +80,8 @@ public class ParkingLotApplicationTest {
         service.registerParkingLotObserver(airportSecurity);
         Object vehicle2 = new Object();
         try {
-            service.park(vehicle);
-            service.park(vehicle2);
+            service.park(vehicle, "15:00");
+            service.park(vehicle2, "15:00");
             boolean capacityFull = airportSecurity.isCapacityFull();
             Assertions.assertTrue(capacityFull);
         } catch (ParkingLotException e) {
@@ -92,8 +92,8 @@ public class ParkingLotApplicationTest {
     public void givenWhenParkingLotSpaceIsAvailableAfterFull_ShouldReturnTrue() {
         service.registerParkingLotObserver(owner);
         try {
-            service.park(vehicle);
-            service.park(new Object());
+            service.park(vehicle, "15:00");
+            service.park(new Object(), "15:00");
             service.unPark(vehicle);
             boolean capacityFull = owner.isCapacityFull();
             Assertions.assertFalse(capacityFull);
@@ -105,20 +105,25 @@ public class ParkingLotApplicationTest {
     @Test
     public void givenVehicle_ToParkingAttendant_ShouldParkTheVehicle() throws ParkingLotException {
         ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
-        parkingLotAttendant.parkVehicle(vehicle);
+        parkingLotAttendant.parkVehicle(vehicle, "15:00");
         boolean vehicleParked = service.isVehicleParked(vehicle);
         Assertions.assertTrue(vehicleParked);
     }
 
     @Test
     public void givenVehicle_WhenParked_ShouldReturnSlotNo() throws ParkingLotException {
-        service.setCapacity(2);
-        Driver driver = new Driver();
-        service.park(vehicle);
+        service.setCapacity(3);
+        service.park(vehicle, "15:00");
         Object vehicle2 = new Object();
-        service.park(vehicle2);
-        service.searchVehicle(vehicle2);
-        int slotNum = driver.showSlot();
+        service.park(vehicle2, "15:00");
+        int slotNum = service.searchVehicle(vehicle2);
         Assertions.assertEquals(1, slotNum);
+    }
+
+    @Test
+    public void givenVehicle_WhenParked_ShouldReturnTime() throws ParkingLotException {
+        service.park(vehicle, "15:00");
+        String parkTime = service.getParkTime(vehicle);
+        Assertions.assertEquals("15:00", parkTime);
     }
 }
