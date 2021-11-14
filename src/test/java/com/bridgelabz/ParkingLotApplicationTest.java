@@ -35,7 +35,6 @@ public class ParkingLotApplicationTest {
 
     @Test
     public void givenAVehicle_WhenAlreadyParked_ShouldReturnException() throws ParkingLotException {
-        service.registerParkingLotObserver(airportSecurity);
         service.park(vehicle);
         Assertions.assertThrows(ParkingLotException.class, () -> service.park(vehicle));
     }
@@ -109,5 +108,15 @@ public class ParkingLotApplicationTest {
         parkingLotAttendant.parkVehicle(vehicle);
         boolean vehicleParked = service.isVehicleParked(vehicle);
         Assertions.assertTrue(vehicleParked);
+    }
+
+    @Test
+    public void givenVehicle_WhenParked_ShouldReturnSlotNo() throws ParkingLotException {
+        service.setCapacity(2);
+        Object vehicle2 = new Object();
+        service.park(vehicle);
+        service.park(vehicle2);
+        int slotNum = service.searchVehicle(vehicle2);
+        Assertions.assertEquals(1, slotNum);
     }
 }

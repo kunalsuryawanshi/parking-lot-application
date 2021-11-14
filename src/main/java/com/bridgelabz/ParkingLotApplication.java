@@ -18,7 +18,6 @@ public class ParkingLotApplication {
     public ParkingLotApplication() {
         this.observers = new ArrayList<>();
         this.vehicles = new ArrayList();
-        //this.actualCapacity = capacity;
     }
 
     /**
@@ -92,6 +91,23 @@ public class ParkingLotApplication {
                 observer.capacityIsAvailable();
             }
             return true;
+        }
+        throw new ParkingLotException("No Such Vehicle Found");
+    }
+
+    /**
+     * Purpose To Search Slot Number For Parked Vehicle
+     *
+     * @param vehicle given Vehicle as Parameter
+     * @return Vehicle Slot Number
+     * @throws ParkingLotException If Vehicle Not Found Throwing Exception
+     */
+    public int searchVehicle(Object vehicle) throws ParkingLotException {
+        Driver driver = new Driver();
+        if (this.vehicles.contains(vehicle)) {
+            int slotNo = vehicles.indexOf(vehicle);
+            driver.vehicleSlotIs(slotNo);
+            return slotNo;
         }
         throw new ParkingLotException("No Such Vehicle Found");
     }
