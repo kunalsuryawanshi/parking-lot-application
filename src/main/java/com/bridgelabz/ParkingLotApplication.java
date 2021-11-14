@@ -63,6 +63,7 @@ public class ParkingLotApplication {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("Vehicle Already Parked");
         this.vehicles.add(vehicle);
+
     }
 
     /**

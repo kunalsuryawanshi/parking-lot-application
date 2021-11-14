@@ -113,10 +113,12 @@ public class ParkingLotApplicationTest {
     @Test
     public void givenVehicle_WhenParked_ShouldReturnSlotNo() throws ParkingLotException {
         service.setCapacity(2);
-        Object vehicle2 = new Object();
+        Driver driver = new Driver();
         service.park(vehicle);
+        Object vehicle2 = new Object();
         service.park(vehicle2);
-        int slotNum = service.searchVehicle(vehicle2);
+        service.searchVehicle(vehicle2);
+        int slotNum = driver.showSlot();
         Assertions.assertEquals(1, slotNum);
     }
 }
