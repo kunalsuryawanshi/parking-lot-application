@@ -68,6 +68,15 @@ public class ParkingLotApplication {
             throw new ParkingLotException
                     (ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED, "Vehicle Already Parked");
         ParkingSlot parkingSlot = new ParkingSlot(vehicle, getTime());
+
+        if (this.vehicles.size() == this.actualCapacity) {
+            for (ParkingLotObserver observer : observers) {
+                observer.capacityIsFull();
+            }
+            throw new ParkingLotException
+                    (ParkingLotException.ExceptionType.PARKING_LOT_IS_FULL, "Parking Lot is Full");
+        }
+
         this.vehicles.add(parkingSlot);
 
         if (this.vehicles.size() - 1 == this.actualCapacity) {
