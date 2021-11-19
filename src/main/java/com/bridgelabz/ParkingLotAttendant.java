@@ -8,9 +8,9 @@ package com.bridgelabz;
  *  @since 10-11-2021
  ******************************************************************************/
 public class ParkingLotAttendant {
-    ParkingLotApplication service = new ParkingLotApplication();
+    ParkingLotApplication parkingLotApplication = new ParkingLotApplication();
 
     public void parkVehicle(Object vehicle) throws ParkingLotException {
-        service.park(vehicle);
+        parkingLotApplication.park(vehicle);
     }
 }

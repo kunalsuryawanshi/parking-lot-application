@@ -9,6 +9,7 @@ package com.bridgelabz;
 public class ParkingLotOwner implements ParkingLotObserver {
     private boolean isCapacityFull;
 
+    @Override
     public void capacityIsFull() {
         isCapacityFull = true;
     }
