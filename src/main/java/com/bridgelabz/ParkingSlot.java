@@ -30,6 +30,10 @@ public class ParkingSlot {
         return vehicleColour;
     }
 
+    public String getNumberPlate() {
+        return numberPlate;
+    }
+
     @Override
     public String toString() {
         return "ParkingSlot{" +
