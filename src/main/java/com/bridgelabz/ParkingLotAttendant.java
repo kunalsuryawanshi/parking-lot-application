@@ -10,7 +10,7 @@ package com.bridgelabz;
 public class ParkingLotAttendant {
     ParkingLotApplication parkingLotApplication = new ParkingLotApplication();
 
-    public void parkVehicle(Object vehicle) throws ParkingLotException {
-        parkingLotApplication.park(vehicle);
+    public void parkVehicle(Object vehicle, String vehicleColour, PersonType personType) throws ParkingLotException {
+        parkingLotApplication.park(vehicle, vehicleColour, personType);
     }
 }

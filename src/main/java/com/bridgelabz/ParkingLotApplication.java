@@ -55,7 +55,7 @@ public class ParkingLotApplication {
     /**
      * Purpose to get Vehicle Parked Time
      *
-     * @return Date and Time For Parked Time
+     * @return Date and Time For Parked Vehicle
      */
     public String getDateTime() {
         LocalDateTime myDateObj = LocalDateTime.now();
@@ -69,26 +69,27 @@ public class ParkingLotApplication {
      *
      * @param vehicle given vehicle as parameter For Park
      */
-    public void park(Object vehicle) throws ParkingLotException {
+    public void park(Object vehicle, String vehicleColour, PersonType personType) throws ParkingLotException {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException
                     (ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED, "Vehicle Already Parked");
 
-        if (this.parkingLot1.size() == this.actualCapacity && this.parkingLot2.size() == this.actualCapacity) {
-            for (ParkingLotObserver observer : observers) {
-                observer.capacityIsFull();
-            }
-            throw new ParkingLotException
-                    (ParkingLotException.ExceptionType.PARKING_LOT_IS_FULL, "Parking Lot is Full");
-        }
+        checkCapacity();
 
-        ParkingSlot parkingSlot = new ParkingSlot(vehicle, getDateTime());
+        ParkingSlot parkingSlot = new ParkingSlot(vehicle, vehicleColour, personType, getDateTime());
         if (parkingLot1.size() > parkingLot2.size()) {
             this.parkingLot2.add(parkingSlot);
         } else
             this.parkingLot1.add(parkingSlot);
 
-        if (this.parkingLot1.size() - 1 == this.actualCapacity && this.parkingLot2.size() - 1 == this.actualCapacity) {
+        if (parkingSlot.getVehicleColour() == "White") {
+            Police police = new Police();
+            police.listOfWhiteVehicles(searchVehicle(vehicle), parkingSlot);
+        }
+    }
+
+    private void checkCapacity() throws ParkingLotException {
+        if (this.parkingLot1.size() == this.actualCapacity && this.parkingLot2.size() == this.actualCapacity) {
             for (ParkingLotObserver observer : observers) {
                 observer.capacityIsFull();
             }

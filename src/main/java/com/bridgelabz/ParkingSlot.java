@@ -8,10 +8,14 @@ package com.bridgelabz;
 public class ParkingSlot {
     private final Object vehicle;
     private final String time;
+    private final PersonType personType;
+    private String vehicleColour;
 
-    public ParkingSlot(Object vehicle, String time) {
+    public ParkingSlot(Object vehicle, String vehicleColour, PersonType personType, String time) {
         this.vehicle = vehicle;
+        this.vehicleColour = vehicleColour;
         this.time = time;
+        this.personType = personType;
     }
 
     public Object getVehicle() {
@@ -20,6 +24,10 @@ public class ParkingSlot {
 
     public String getTime() {
         return time;
+    }
+
+    public String getVehicleColour() {
+        return vehicleColour;
     }
 
     @Override
