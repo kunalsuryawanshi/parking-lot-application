@@ -134,4 +134,13 @@ public class ParkingLotApplicationTest {
         boolean isVehicleAdded = Police.isVehicleAdded(slotNo);
         Assertions.assertTrue(isVehicleAdded);
     }
+
+    @Test
+    public void givenVehicle_WhenBMW_ShouldInformPolice() throws ParkingLotException {
+        parkingLotApplication.setCapacity(1);
+        parkingLotApplication.park("MH04 AB5668", "BMW", "Red");
+        int slotNo = parkingLotApplication.searchVehicle("BMW");
+        boolean isVehicleAdded = Police.isVehicleAdded(slotNo);
+        Assertions.assertTrue(isVehicleAdded);
+    }
 }
