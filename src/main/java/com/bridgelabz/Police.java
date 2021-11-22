@@ -2,18 +2,25 @@ package com.bridgelabz;
 
 import java.util.HashMap;
 
+/******************************************************************************
+ *  Purpose To add Suspicious Vehicle in List So Police Can Investigate
+ *
+ *  @author KUNAL SURYAWANSHI
+ *  @version 1.0
+ *  @since 10-11-2021
+ ******************************************************************************/
 public class Police {
-    public static HashMap<Integer, ParkingSlot> whiteCars;
+    public static HashMap<Integer, ParkingSlot> SuspiciousVehicles;
 
     public Police() {
-        this.whiteCars = new HashMap();
+        this.SuspiciousVehicles = new HashMap();
     }
 
     public static boolean isVehicleAdded(int slotNumber) {
-        return whiteCars.containsKey(slotNumber);
+        return SuspiciousVehicles.containsKey(slotNumber);
     }
 
-    public void listOfWhiteVehicles(int slotNo, ParkingSlot parkingSlot) {
-        whiteCars.put(slotNo, parkingSlot);
+    public void addInSuspiciousVehicles(int slotNo, ParkingSlot parkingSlot) {
+        SuspiciousVehicles.put(slotNo, parkingSlot);
     }
 }

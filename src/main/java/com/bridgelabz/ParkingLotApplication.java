@@ -17,11 +17,13 @@ public class ParkingLotApplication {
     private static List<ParkingSlot> parkingLot2;
     private static List<ParkingLotObserver> observers;
     private static int actualCapacity;
+    private static Police police;
 
     public ParkingLotApplication() {
         this.observers = new ArrayList<>();
         this.parkingLot1 = new ArrayList();
         this.parkingLot2 = new ArrayList();
+        police = new Police();
     }
 
     /**
@@ -69,25 +71,43 @@ public class ParkingLotApplication {
      *
      * @param vehicle given vehicle as parameter For Park
      */
-    public void park(Object vehicle, String vehicleColour, PersonType personType) throws ParkingLotException {
+    public void park(String numberPlate, String vehicle, String vehicleColour) throws ParkingLotException {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException
                     (ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED, "Vehicle Already Parked");
 
         checkCapacity();
 
-        ParkingSlot parkingSlot = new ParkingSlot(vehicle, vehicleColour, personType, getDateTime());
+        ParkingSlot parkingSlot = new ParkingSlot(numberPlate, vehicle, vehicleColour, getDateTime());
         if (parkingLot1.size() > parkingLot2.size()) {
             this.parkingLot2.add(parkingSlot);
         } else
             this.parkingLot1.add(parkingSlot);
 
+        checkSuspiciousVehicle(parkingSlot, vehicle);
+    }
+
+    /**
+     * Purpose To add Suspicious Vehicle In List
+     *
+     * @param parkingSlot given parkingSlot For Check it's Suspicious or not
+     * @param vehicle     given vehicle For Check it's Suspicious Vehicle or not
+     */
+    private void checkSuspiciousVehicle(ParkingSlot parkingSlot, String vehicle) throws ParkingLotException {
         if (parkingSlot.getVehicleColour() == "White") {
-            Police police = new Police();
-            police.listOfWhiteVehicles(searchVehicle(vehicle), parkingSlot);
+            police.addInSuspiciousVehicles(searchVehicle(vehicle), parkingSlot);
+        }
+
+        if (parkingSlot.getVehicleColour() == "Blue" && parkingSlot.getVehicle() == "Toyota") {
+            police.addInSuspiciousVehicles(searchVehicle(vehicle), parkingSlot);
         }
     }
 
+    /**
+     * Purpose To check Capacity Of Slots
+     *
+     * @throws ParkingLotException if Capacity is full Throw Exception
+     */
     private void checkCapacity() throws ParkingLotException {
         if (this.parkingLot1.size() == this.actualCapacity && this.parkingLot2.size() == this.actualCapacity) {
             for (ParkingLotObserver observer : observers) {
@@ -125,7 +145,7 @@ public class ParkingLotApplication {
      * @return Boolean type for Vehicle UnPark
      * @throws ParkingLotException If Condition Not Matches Then Throwing Exception Vehicle Not Found
      */
-    public boolean unPark(Object vehicle) throws ParkingLotException {
+    public boolean unPark(String vehicle) throws ParkingLotException {
         if (this.parkingLot1 == null || this.parkingLot2 == null) return false;
         for (ParkingSlot slot : parkingLot1) {
             if (slot.getVehicle().equals(vehicle)) {
@@ -155,7 +175,7 @@ public class ParkingLotApplication {
      * @return Vehicle Slot Number
      * @throws ParkingLotException If Vehicle Not Found Throwing Exception
      */
-    public int searchVehicle(Object vehicle) throws ParkingLotException {
+    public int searchVehicle(String vehicle) throws ParkingLotException {
         for (ParkingSlot slot : parkingLot1) {
             if (slot.getVehicle().equals(vehicle))
                 return parkingLot1.indexOf(slot);
@@ -174,7 +194,7 @@ public class ParkingLotApplication {
      * @return Vehicle Park Time
      * @throws ParkingLotException If Vehicle Not Found Throw Exception
      */
-    public String getParkTime(Object vehicle) throws ParkingLotException {
+    public String getParkTime(String vehicle) throws ParkingLotException {
         for (ParkingSlot slot : parkingLot1) {
             if (slot.getVehicle().equals(vehicle))
                 return slot.getTime();

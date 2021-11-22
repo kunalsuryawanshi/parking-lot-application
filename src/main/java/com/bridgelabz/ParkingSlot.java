@@ -6,16 +6,16 @@ package com.bridgelabz;
  *  @since 10-11-2021
  ******************************************************************************/
 public class ParkingSlot {
-    private final Object vehicle;
+    private final String numberPlate;
+    private final String vehicle;
     private final String time;
-    private final PersonType personType;
     private String vehicleColour;
 
-    public ParkingSlot(Object vehicle, String vehicleColour, PersonType personType, String time) {
+    public ParkingSlot(String numberPlate, String vehicle, String vehicleColour, String time) {
+        this.numberPlate = numberPlate;
         this.vehicle = vehicle;
         this.vehicleColour = vehicleColour;
         this.time = time;
-        this.personType = personType;
     }
 
     public Object getVehicle() {
@@ -28,14 +28,6 @@ public class ParkingSlot {
 
     public String getVehicleColour() {
         return vehicleColour;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ParkingSlot parkingSlot1 = (ParkingSlot) o;
-        return vehicle.equals(parkingSlot1.vehicle) && time.equals(parkingSlot1.time);
     }
 
     @Override

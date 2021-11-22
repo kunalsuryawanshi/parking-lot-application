@@ -8,11 +8,9 @@ public class ParkingLotApplicationTest {
     ParkingLotApplication parkingLotApplication;
     AirportSecurity airportSecurity;
     ParkingLotOwner owner;
-    Object vehicle = null;
 
     @BeforeEach
     void setUp() {
-        vehicle = new Object();
         owner = new ParkingLotOwner();
         airportSecurity = new AirportSecurity();
         parkingLotApplication = new ParkingLotApplication();
@@ -28,28 +26,28 @@ public class ParkingLotApplicationTest {
     @Test
     public void givenAVehicle_WhenParked_ShouldReturnTrue() throws ParkingLotException {
         parkingLotApplication.setCapacity(1);
-        parkingLotApplication.park(vehicle, "Red", PersonType.NORMAL);
-        boolean isParked = parkingLotApplication.isVehicleParked(vehicle);
+        parkingLotApplication.park("MH04 AK5481", "vehicle", "Red");
+        boolean isParked = parkingLotApplication.isVehicleParked("vehicle");
         Assertions.assertTrue(isParked);
     }
 
     @Test
     public void givenAVehicle_WhenAlreadyParked_ShouldReturnException() throws ParkingLotException {
         parkingLotApplication.setCapacity(1);
-        parkingLotApplication.park(vehicle, "Red", PersonType.NORMAL);
+        parkingLotApplication.park("MH04 AK5481", "vehicle", "Red");
         Assertions.assertThrows(ParkingLotException.class,
-                () -> parkingLotApplication.park(vehicle, "Red", PersonType.NORMAL));
+                () -> parkingLotApplication.park("MH04 AK5481", "vehicle", "Red"));
     }
 
     @Test
     public void givenNullVehicle_WhenUnPark_ShouldReturnException() {
-        Assertions.assertThrows(ParkingLotException.class, () -> parkingLotApplication.unPark(vehicle));
+        Assertions.assertThrows(ParkingLotException.class, () -> parkingLotApplication.unPark("vehicle"));
     }
 
     @Test
     public void givenAVehicle_WhenUnParked_ShouldReturnTrue() throws ParkingLotException {
-        parkingLotApplication.park(vehicle, "Red", PersonType.NORMAL);
-        boolean isUnParked = parkingLotApplication.unPark(vehicle);
+        parkingLotApplication.park("MH04 AK5481", "vehicle", "Red");
+        boolean isUnParked = parkingLotApplication.unPark("vehicle");
         Assertions.assertTrue(isUnParked);
     }
 
@@ -57,21 +55,19 @@ public class ParkingLotApplicationTest {
     public void givenVehicle_WhenParkingLotIsFull_ShouldInformTheOwner() throws ParkingLotException {
         parkingLotApplication.setCapacity(1);
         parkingLotApplication.registerParkingLotObserver(owner);
-        Object vehicle2 = new Object();
-        Object vehicle3 = new Object();
-        parkingLotApplication.park(vehicle, "Red", PersonType.NORMAL);
-        parkingLotApplication.park(vehicle2, "Red", PersonType.NORMAL);
-        Assertions.assertThrows(Exception.class, () -> parkingLotApplication.park(vehicle3, "Red", PersonType.NORMAL));
+        parkingLotApplication.park("MH04 AK5481", "vehicle", "Red");
+        parkingLotApplication.park("MH04 AK5481", "vehicle2", "Red");
+        Assertions.assertThrows(Exception.class,
+                () -> parkingLotApplication.park("MH04 DQ5551", "vehicle3", "Red"));
     }
 
     @Test
     public void givenCapacityIs2_ShouldBeAbleToPark2Vehicles() throws ParkingLotException {
-        Object vehicle2 = new Object();
         parkingLotApplication.setCapacity(2);
-        parkingLotApplication.park(vehicle, "Red", PersonType.NORMAL);
-        parkingLotApplication.park(vehicle2, "Red", PersonType.NORMAL);
-        boolean isVehicleParked1 = parkingLotApplication.isVehicleParked(vehicle);
-        boolean isVehicleParked2 = parkingLotApplication.isVehicleParked(vehicle2);
+        parkingLotApplication.park("MH04 AK5481", "vehicle", "Red");
+        parkingLotApplication.park("MH04 AK5481", "vehicle2", "Red");
+        boolean isVehicleParked1 = parkingLotApplication.isVehicleParked("vehicle");
+        boolean isVehicleParked2 = parkingLotApplication.isVehicleParked("vehicle2");
         Assertions.assertTrue(isVehicleParked1 && isVehicleParked2);
     }
 
@@ -79,18 +75,17 @@ public class ParkingLotApplicationTest {
     public void givenWhenParkingLotIsFull_ShouldInformTheSecurity() throws ParkingLotException {
         parkingLotApplication.setCapacity(1);
         parkingLotApplication.registerParkingLotObserver(airportSecurity);
-        Object vehicle2 = new Object();
-        Object vehicle3 = new Object();
-        parkingLotApplication.park(vehicle, "Red", PersonType.NORMAL);
-        parkingLotApplication.park(vehicle2, "Red", PersonType.NORMAL);
-        Assertions.assertThrows(ParkingLotException.class, () -> parkingLotApplication.park(vehicle3, "Red", PersonType.NORMAL));
+        parkingLotApplication.park("MH04 AK5481", "vehicle", "Red");
+        parkingLotApplication.park("MH04 AK5481", "vehicle2", "Red");
+        Assertions.assertThrows(ParkingLotException.class,
+                () -> parkingLotApplication.park("MH04 AW8999", "vehicle3", "Red"));
     }
 
     @Test
     public void givenWhenParkingLotSpaceIsAvailableAfterFull_ShouldReturnTrue() throws ParkingLotException {
         parkingLotApplication.setCapacity(1);
-        parkingLotApplication.park(vehicle, "Red", PersonType.NORMAL);
-        parkingLotApplication.unPark(vehicle);
+        parkingLotApplication.park("MH04 AK5481", "vehicle", "Red");
+        parkingLotApplication.unPark("vehicle");
         boolean capacityFull = owner.isCapacityFull();
         Assertions.assertFalse(capacityFull);
     }
@@ -99,35 +94,44 @@ public class ParkingLotApplicationTest {
     public void givenVehicle_ToParkingAttendant_ShouldParkTheVehicle() throws ParkingLotException {
         parkingLotApplication.setCapacity(1);
         ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant();
-        parkingLotAttendant.parkVehicle(vehicle, "Red", PersonType.NORMAL);
-        boolean vehicleParked = parkingLotApplication.isVehicleParked(vehicle);
+        parkingLotAttendant.parkVehicle("MH04 AK5481", "vehicle", "Red");
+        boolean vehicleParked = parkingLotApplication.isVehicleParked("vehicle");
         Assertions.assertTrue(vehicleParked);
     }
 
     @Test
     public void givenVehicle_WhenParked_ShouldReturnSlotNo() throws ParkingLotException {
         parkingLotApplication.setCapacity(3);
-        parkingLotApplication.park(vehicle, "Red", PersonType.NORMAL);
-        Object vehicle2 = new Object();
-        parkingLotApplication.park(vehicle2, "Red", PersonType.NORMAL);
-        int slotNum = parkingLotApplication.searchVehicle(vehicle2);
+        parkingLotApplication.park("MH04 AK5481", "vehicle", "Red");
+        parkingLotApplication.park("MH04 AK5481", "vehicle2", "Red");
+        int slotNum = parkingLotApplication.searchVehicle("vehicle2");
         Assertions.assertEquals(0, slotNum);
     }
 
     @Test
     public void givenVehicle_WhenParked_ShouldReturnTime() throws ParkingLotException {
         parkingLotApplication.setCapacity(1);
-        parkingLotApplication.park(vehicle, "Black", PersonType.NORMAL);
-        String parkTime = parkingLotApplication.getParkTime(vehicle);
+        parkingLotApplication.park("MH04 AK5481", "vehicle", "Black");
+        String parkTime = parkingLotApplication.getParkTime("vehicle");
         Assertions.assertEquals(parkingLotApplication.getDateTime(), parkTime);
     }
 
     @Test
     public void givenWhiteVehicle_WhenParked_ShouldInformPoliceDepartment() throws ParkingLotException {
         parkingLotApplication.setCapacity(2);
-        parkingLotApplication.park(vehicle, "White", PersonType.NORMAL);
-        int slotNo = parkingLotApplication.searchVehicle(vehicle);
-        boolean vehicleAdded = Police.isVehicleAdded(slotNo);
-        Assertions.assertTrue(vehicleAdded);
+        parkingLotApplication.park("MH04 0001", "vehicle", "White");
+        int slotNo = parkingLotApplication.searchVehicle("vehicle");
+        boolean isVehicleAdded = Police.isVehicleAdded(slotNo);
+        Assertions.assertTrue(isVehicleAdded);
+    }
+
+    @Test
+    public void givenVehicle_WhenBlueToyota_ShouldInformPolice() throws ParkingLotException {
+        parkingLotApplication.setCapacity(2);
+        parkingLotApplication.park("MH04 AX5668", "Ford", "Black");
+        parkingLotApplication.park("MH04 AZ7894", "Toyota", "Blue");
+        int slotNo = parkingLotApplication.searchVehicle("Toyota");
+        boolean isVehicleAdded = Police.isVehicleAdded(slotNo);
+        Assertions.assertTrue(isVehicleAdded);
     }
 }
