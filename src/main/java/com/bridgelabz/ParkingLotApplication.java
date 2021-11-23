@@ -73,8 +73,8 @@ public class ParkingLotApplication {
      * @param vehicle     given vehicle as parameter For Park
      * @param vehicleType it's For Defining Vehicle Size
      */
-    public void park(String numberPlate, String vehicle, String vehicleColour,
-                     ParkingSlot.VehicleType vehicleType) throws ParkingLotException {
+    public void park(String numberPlate, String vehicle, String vehicleColour, ParkingSlot.VehicleType vehicleType,
+                     ParkingSlot.PersonType personType) throws ParkingLotException {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException
                     (ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED, "Vehicle Already Parked");
@@ -82,7 +82,7 @@ public class ParkingLotApplication {
         checkCapacity();
 
         parkingSlot = new ParkingSlot(numberPlate, vehicle, vehicleColour,
-                vehicleType, getDateTime());
+                vehicleType, personType, getDateTime());
         if (police.checkNumberPlate(numberPlate)) {
             if (parkingLot1.size() > parkingLot2.size()) {
                 this.parkingLot2.add(parkingSlot);
@@ -125,18 +125,22 @@ public class ParkingLotApplication {
     public void checkSuspiciousVehicleByColour(String vehicleColour) throws ParkingLotException {
         for (ParkingSlot slot : parkingLot1) {
             if (slot.getVehicleColour().equals(vehicleColour)) {
-                police.addInSuspiciousVehicles(searchVehicleByColour(vehicleColour), parkingSlot);
+                police.addInSuspiciousVehicles
+                        (searchVehicleByColour(vehicleColour), parkingSlot);
             }
             if (slot.getVehicleColour().equals(vehicleColour)) {
-                police.addInSuspiciousVehicles(searchVehicleByColour(vehicleColour), parkingSlot);
+                police.addInSuspiciousVehicles
+                        (searchVehicleByColour(vehicleColour), parkingSlot);
             }
         }
         for (ParkingSlot slot : parkingLot2) {
             if (slot.getVehicleColour().equals(vehicleColour)) {
-                police.addInSuspiciousVehicles(searchVehicleByColour(vehicleColour), parkingSlot);
+                police.addInSuspiciousVehicles
+                        (searchVehicleByColour(vehicleColour), parkingSlot);
             }
             if (slot.getVehicleColour().equals(vehicleColour)) {
-                police.addInSuspiciousVehicles(searchVehicleByColour(vehicleColour), parkingSlot);
+                police.addInSuspiciousVehicles
+                        (searchVehicleByColour(vehicleColour), parkingSlot);
             }
         }
     }
