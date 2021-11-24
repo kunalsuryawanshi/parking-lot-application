@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
 import java.time.LocalTime;
 
 public class ParkingLotApplicationTest {
@@ -202,5 +201,16 @@ public class ParkingLotApplicationTest {
         parkingLotApplication.setCapacity(1);
         boolean checkNumberPlate = Police.checkNumberPlate("04MH 7814");
         Assertions.assertFalse(checkNumberPlate);
+    }
+
+    @Test
+    public void givenVehicle_WhenNormalHandicapped_ShouldInformPolice() throws ParkingLotException {
+        parkingLotApplication.setCapacity(2);
+        parkingLotApplication.park("MH04 AB5668", "BMW", "Red",
+                ParkingSlot.VehicleType.NORMAL, ParkingSlot.PersonType.HANDICAP);
+        parkingLotApplication.checkPersonTypeAndVehicleType(ParkingSlot.PersonType.HANDICAP,
+                ParkingSlot.VehicleType.NORMAL);
+        int handicapTypeAdded = Police.isHandicapTypeAdded();
+        Assertions.assertEquals(1, handicapTypeAdded);
     }
 }

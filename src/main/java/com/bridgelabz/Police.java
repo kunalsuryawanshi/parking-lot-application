@@ -13,15 +13,21 @@ import java.util.regex.Pattern;
  ******************************************************************************/
 public class Police {
     public static HashMap<Integer, ParkingSlot> suspiciousVehicles;
+    public static HashMap<Integer, ParkingSlot> handicapType;
     public static HashMap<Integer, ParkingSlot> parkedVehicleInLast30Min;
 
     public Police() {
         this.suspiciousVehicles = new HashMap();
+        this.handicapType = new HashMap();
         this.parkedVehicleInLast30Min = new HashMap();
     }
 
     public static boolean isVehicleAdded(int slotNumber) {
         return suspiciousVehicles.containsKey(slotNumber);
+    }
+
+    public static int isHandicapTypeAdded() {
+        return handicapType.size();
     }
 
     /**
@@ -42,5 +48,9 @@ public class Police {
 
     public void parkedVehicleInLast30Min(int slotNo, ParkingSlot parkingSlot) {
         parkedVehicleInLast30Min.put(slotNo, parkingSlot);
+    }
+
+    public void addInHandicapVehicle(int slotNo, ParkingSlot parkingSlot) {
+        handicapType.put(slotNo, parkingSlot);
     }
 }

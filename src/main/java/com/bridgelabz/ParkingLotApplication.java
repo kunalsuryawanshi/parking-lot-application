@@ -98,24 +98,24 @@ public class ParkingLotApplication {
     /**
      * Purpose To Check Suspicious Vehicle and Inform Police
      *
-     * @param carName given Vehicle as Parameter for Checking Suspicious Vehicle or Not
+     * @param vehicleName given Vehicle as Parameter for Checking Suspicious Vehicle or Not
      * @throws ParkingLotException If Vehicle Not Found Throwing Exception
      */
-    public void checkSuspiciousVehicle(String carName) throws ParkingLotException {
+    public void checkSuspiciousVehicle(String vehicleName) throws ParkingLotException {
         for (ParkingSlot slot : parkingLot1) {
-            if (slot.getVehicle().equals(carName)) {
-                police.addInSuspiciousVehicles(searchVehicle(carName), parkingSlot);
+            if (slot.getVehicle().equals(vehicleName)) {
+                police.addInSuspiciousVehicles(searchVehicle(vehicleName), parkingSlot);
             }
-            if (slot.getVehicle().equals(carName)) {
-                police.addInSuspiciousVehicles(searchVehicle(carName), parkingSlot);
+            if (slot.getVehicle().equals(vehicleName)) {
+                police.addInSuspiciousVehicles(searchVehicle(vehicleName), parkingSlot);
             }
         }
         for (ParkingSlot slot : parkingLot2) {
-            if (slot.getVehicle().equals(carName)) {
-                police.addInSuspiciousVehicles(searchVehicle(carName), parkingSlot);
+            if (slot.getVehicle().equals(vehicleName)) {
+                police.addInSuspiciousVehicles(searchVehicle(vehicleName), parkingSlot);
             }
-            if (slot.getVehicle().equals(carName)) {
-                police.addInSuspiciousVehicles(searchVehicle(carName), parkingSlot);
+            if (slot.getVehicle().equals(vehicleName)) {
+                police.addInSuspiciousVehicles(searchVehicle(vehicleName), parkingSlot);
             }
         }
     }
@@ -173,6 +173,48 @@ public class ParkingLotApplication {
                 police.addInSuspiciousVehicles(searchVehicle(vehicleName), parkingSlot);
             }
         }
+    }
+
+    /**
+     * Purpose To check given personType is Present in the slot or Not
+     * If present then Inform to Police Department
+     *
+     * @param personType  for Checking in Slot personType Present Or Not
+     * @param vehicleType for Checking in Slot vehicleType Present Or Not
+     * @throws ParkingLotException if vehicle not Found Throw Exception
+     */
+    public void checkPersonTypeAndVehicleType(ParkingSlot.PersonType personType, ParkingSlot.VehicleType vehicleType) throws ParkingLotException {
+        for (ParkingSlot slot : parkingLot1) {
+            if (slot.getPersonType().equals(personType) && slot.getVehicleType().equals(vehicleType)) {
+                police.addInHandicapVehicle(searchVehicleByPersonType(personType), parkingSlot);
+            }
+        }
+        for (ParkingSlot slot : parkingLot2) {
+            if (slot.getPersonType().equals(personType) && slot.getVehicleType().equals(vehicleType)) {
+                police.addInHandicapVehicle(searchVehicleByPersonType(personType), parkingSlot);
+            }
+        }
+    }
+
+    /**
+     * Purpose To Search slot Number By Person Type
+     *
+     * @param personType for search vehicle in slot
+     * @return Slot Number of vehicle
+     * @throws ParkingLotException if Vehicle Not Found Throw No Such Vehicle Found
+     */
+    public int searchVehicleByPersonType(ParkingSlot.PersonType personType) throws ParkingLotException {
+        for (ParkingSlot slot : parkingLot1) {
+            if (slot.getPersonType().equals(personType)) {
+                return parkingLot1.indexOf(slot);
+            }
+        }
+        for (ParkingSlot slot : parkingLot2) {
+            if (slot.getPersonType().equals(personType)) {
+                return parkingLot2.indexOf(slot);
+            }
+        }
+        throw new ParkingLotException(ParkingLotException.ExceptionType.NO_SUCH_VEHICLE, "No Such Vehicle Found");
     }
 
     /**

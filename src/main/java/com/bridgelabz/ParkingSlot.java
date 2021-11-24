@@ -37,6 +37,14 @@ public class ParkingSlot {
         return vehicleColour;
     }
 
+    public PersonType getPersonType() {
+        return personType;
+    }
+
+    public VehicleType getVehicleType() {
+        return vehicleType;
+    }
+
     @Override
     public String toString() {
         return "ParkingSlot{" +
