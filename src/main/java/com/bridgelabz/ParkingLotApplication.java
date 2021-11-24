@@ -7,9 +7,13 @@ package com.bridgelabz;
  *  @since 10-11-2021
  ******************************************************************************/
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ParkingLotApplication {
@@ -60,11 +64,11 @@ public class ParkingLotApplication {
      *
      * @return Date and Time For Parked Vehicle
      */
-    public String getDateTime() {
+    public LocalTime getTime() {
         LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("HH:mm");
         String formattedDate = myDateObj.format(formatTime);
-        return formattedDate;
+        return LocalTime.parse(formattedDate);
     }
 
     /**
@@ -82,7 +86,7 @@ public class ParkingLotApplication {
         checkCapacity();
 
         parkingSlot = new ParkingSlot(numberPlate, vehicle, vehicleColour,
-                vehicleType, personType, getDateTime());
+                vehicleType, personType, getTime());
         if (police.checkNumberPlate(numberPlate)) {
             if (parkingLot1.size() > parkingLot2.size()) {
                 this.parkingLot2.add(parkingSlot);
@@ -255,6 +259,13 @@ public class ParkingLotApplication {
         throw new ParkingLotException(ParkingLotException.ExceptionType.NO_SUCH_VEHICLE, "No Such Vehicle Found");
     }
 
+    /**
+     * Purpose To Search Vehicle By Colour
+     *
+     * @param vehicleColour for search a Colour in ParkingLot
+     * @return vehicle Position
+     * @throws ParkingLotException If Vehicle Not Found Throw Exception
+     */
     private int searchVehicleByColour(String vehicleColour) throws ParkingLotException {
         for (ParkingSlot slot : parkingLot1) {
             if (slot.getVehicleColour().equals(vehicleColour))
@@ -267,6 +278,45 @@ public class ParkingLotApplication {
         throw new ParkingLotException(ParkingLotException.ExceptionType.NO_SUCH_VEHICLE, "No Such Vehicle Found");
     }
 
+    /**
+     * Purpose To get Last 30 Minute Parked Vehicle
+     *
+     * @param time for Checking Vehicle Parked Time
+     * @throws ParkingLotException If vehicle Not Found Throw Exception
+     */
+    public void getLast30MinuteParkedVehicles(LocalTime time) throws ParkingLotException {
+        for (int i = 1; i < 30; i++) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MINUTE, -i);
+            Date oneHourBack = cal.getTime();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            String checkTime = dateFormat.format(oneHourBack);
+            for (ParkingSlot slot : parkingLot1) {
+                if (checkTime.equals(slot.getTime())) {
+                    police.parkedVehicleInLast30Min(searchVehicleByTime(time), parkingSlot);
+                }
+            }
+        }
+    }
+
+    /**
+     * Purpose To Search ParkingLot By Parked Time
+     *
+     * @param ParkedTime for search vehicle by parked time
+     * @return index of founded Vehicle
+     * @throws ParkingLotException If vehicle Not Found Throw Exception
+     */
+    private int searchVehicleByTime(LocalTime ParkedTime) throws ParkingLotException {
+        for (ParkingSlot slot : parkingLot1) {
+            if (slot.getTime().equals(ParkedTime))
+                return parkingLot1.indexOf(slot);
+        }
+        for (ParkingSlot slot : parkingLot2) {
+            if (slot.getTime().equals(ParkedTime))
+                return parkingLot2.indexOf(slot);
+        }
+        throw new ParkingLotException(ParkingLotException.ExceptionType.NO_SUCH_VEHICLE, "No Such Vehicle Found");
+    }
 
     /**
      * Purpose To Get Park Time For Parked Vehicle
@@ -275,7 +325,7 @@ public class ParkingLotApplication {
      * @return Vehicle Park Time
      * @throws ParkingLotException If Vehicle Not Found Throw Exception
      */
-    public String getParkTime(String vehicle) throws ParkingLotException {
+    public LocalTime getParkTime(String vehicle) throws ParkingLotException {
         for (ParkingSlot slot : parkingLot1) {
             if (slot.getVehicle().equals(vehicle))
                 return slot.getTime();

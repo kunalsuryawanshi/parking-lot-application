@@ -1,5 +1,7 @@
 package com.bridgelabz;
 
+import java.time.LocalTime;
+
 /******************************************************************************
  *  @author KUNAL SURYAWANSHI
  *  @version 1.0
@@ -8,13 +10,13 @@ package com.bridgelabz;
 public class ParkingSlot {
     private final String numberPlate;
     private final String vehicle;
-    private final String time;
+    private final LocalTime time;
     private final VehicleType vehicleType;
     private final PersonType personType;
     private String vehicleColour;
 
     public ParkingSlot(String numberPlate, String vehicle, String vehicleColour,
-                       VehicleType vehicleType, PersonType personType, String time) {
+                       VehicleType vehicleType, PersonType personType, LocalTime time) {
         this.numberPlate = numberPlate;
         this.vehicle = vehicle;
         this.vehicleColour = vehicleColour;
@@ -27,7 +29,7 @@ public class ParkingSlot {
         return vehicle;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 

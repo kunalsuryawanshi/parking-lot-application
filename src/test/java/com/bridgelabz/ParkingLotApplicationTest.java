@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
+import java.time.LocalTime;
+
 public class ParkingLotApplicationTest {
     ParkingLotApplication parkingLotApplication;
     AirportSecurity airportSecurity;
@@ -136,8 +139,8 @@ public class ParkingLotApplicationTest {
         parkingLotApplication.park
                 ("MH04 AK5481", "vehicle", "Black",
                         ParkingSlot.VehicleType.NORMAL, ParkingSlot.PersonType.NORMAL);
-        String parkTime = parkingLotApplication.getParkTime("vehicle");
-        Assertions.assertEquals(parkingLotApplication.getDateTime(), parkTime);
+        LocalTime parkTime = parkingLotApplication.getParkTime("vehicle");
+        Assertions.assertEquals(parkingLotApplication.getTime(), parkTime);
     }
 
     @Test
@@ -199,12 +202,5 @@ public class ParkingLotApplicationTest {
         parkingLotApplication.setCapacity(1);
         boolean checkNumberPlate = Police.checkNumberPlate("04MH 7814");
         Assertions.assertFalse(checkNumberPlate);
-    }
-
-    @Test
-    public void givenVehicle_WhenPersonIsHandicap_ShouldParkInNearestFreeSpaceLot() throws ParkingLotException {
-        parkingLotApplication.setCapacity(2);
-        parkingLotApplication.park("MH04 AB5668", "BMW", "Red",
-                ParkingSlot.VehicleType.NORMAL, ParkingSlot.PersonType.HANDICAP);
     }
 }
